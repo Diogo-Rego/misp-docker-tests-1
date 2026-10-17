@@ -14,6 +14,7 @@ jobs:
         target: [misp-core, misp-modules, misp-core-slim, misp-modules-slim, misp-guard, misp-nginx]
 
     permissions:
+      actions: read
       contents: write
       packages: write
 
@@ -65,15 +66,16 @@ jobs:
           #   *.cache-from=type=gha
           #   *.cache-to=type=gha,mode=max
 
-      # - name: Generate SBOM
-      #   uses: anchore/sbom-action@v0
-      #   with:
-      #     image: ${{ env.IMAGE }}
-      #     registry-username: ${{ github.actor }}
-      #     registry-password: ${{ secrets.GITHUB_TOKEN }}
-      #     format: "spdx-json"
-      #     output-file: "sbom-${{ matrix.target }}.spdx.json"
-      #     dependency-snapshot: false
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.IMAGE }}
+          registry-username: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          format: "spdx-json"
+          output-file: "sbom-${{ matrix.target }}.spdx.json"
+          dependency-snapshot: true
+          dependency-snapshot-correlator: "${{ github.workflow }}_${{ github.job }}_${{ matrix.target }}"
 
       # - name: Sanitize PURLs in SBOM
       #   run: |
