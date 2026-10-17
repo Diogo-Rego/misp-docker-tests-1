@@ -10,34 +10,34 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
-    # commit-message:
-    #   prefix: "ci"
-    #   include: "scope"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
 
   - package-ecosystem: "docker"
     directory: "/core"
     schedule:
       interval: "daily"
-    # commit-message:
-    #   prefix: "docker"
+    commit-message:
+      prefix: "docker"
 
   - package-ecosystem: "docker"
     directory: "/modules"
     schedule:
       interval: "daily"
-    # commit-message:
-    #   prefix: "docker"
+    commit-message:
+      prefix: "docker"
 
   - package-ecosystem: "docker"
     directory: "/nginx"
     schedule:
       interval: "daily"
-    # commit-message:
-    #   prefix: "docker"
+    commit-message:
+      prefix: "docker"
 
   - package-ecosystem: "docker"
     directory: "/guard"
     schedule:
       interval: "daily"
-    # commit-message:
-    #   prefix: "docker"
+    commit-message:
+      prefix: "docker"
