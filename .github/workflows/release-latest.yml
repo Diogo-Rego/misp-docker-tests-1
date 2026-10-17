@@ -67,7 +67,7 @@ jobs:
           #   *.cache-to=type=gha,mode=max
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0
+        uses: Diogo-Rego/sbom-action@feat/dependency-snapshot-correlator-input
         with:
           image: ${{ env.IMAGE }}
           registry-username: ${{ github.actor }}
@@ -75,7 +75,7 @@ jobs:
           format: "spdx-json"
           output-file: "sbom-${{ matrix.target }}.spdx.json"
           dependency-snapshot: true
-          dependency-snapshot-correlator: "${{ github.workflow }}_${{ github.job }}_${{ matrix.target }}"
+          correlator: "${{ github.workflow }}_${{ github.job }}_${{ matrix.target }}"
 
       # - name: Sanitize PURLs in SBOM
       #   run: |
