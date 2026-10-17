@@ -15,7 +15,28 @@ updates:
     #   include: "scope"
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "/core"
+    schedule:
+      interval: "daily"
+    # commit-message:
+    #   prefix: "docker"
+
+  - package-ecosystem: "docker"
+    directory: "/modules"
+    schedule:
+      interval: "daily"
+    # commit-message:
+    #   prefix: "docker"
+
+  - package-ecosystem: "docker"
+    directory: "/nginx"
+    schedule:
+      interval: "daily"
+    # commit-message:
+    #   prefix: "docker"
+
+  - package-ecosystem: "docker"
+    directory: "/guard"
     schedule:
       interval: "daily"
     # commit-message:
