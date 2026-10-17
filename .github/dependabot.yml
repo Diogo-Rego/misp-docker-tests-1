@@ -21,7 +21,7 @@ updates:
     commit-message:
       prefix: "docker"
     groups:
-      core-updates:
+      docker-updates:
         patterns:
           - "*"
 
@@ -32,7 +32,7 @@ updates:
     commit-message:
       prefix: "docker"
     groups:
-      core-updates:
+      docker-updates:
         patterns:
           - "*"
 
@@ -43,7 +43,7 @@ updates:
     commit-message:
       prefix: "docker"
     groups:
-      core-updates:
+      docker-updates:
         patterns:
           - "*"
 
@@ -54,6 +54,6 @@ updates:
     commit-message:
       prefix: "docker"
     groups:
-      core-updates:
+      docker-updates:
         patterns:
           - "*"
