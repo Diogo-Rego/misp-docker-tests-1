@@ -20,6 +20,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "docker"
+    groups:
+      core-updates:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directory: "/modules"
@@ -27,6 +31,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "docker"
+    groups:
+      core-updates:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directory: "/nginx"
@@ -34,6 +42,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "docker"
+    groups:
+      core-updates:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directory: "/guard"
@@ -41,3 +53,7 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "docker"
+    groups:
+      core-updates:
+        patterns:
+          - "*"
