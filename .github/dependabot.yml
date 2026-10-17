@@ -15,45 +15,12 @@ updates:
       include: "scope"
 
   - package-ecosystem: "docker"
-    directory: "/core"
+    directories:
+      - "/core"
+      - "/modules"
+      - "/nginx"
+      - "/guard"
     schedule:
       interval: "daily"
     commit-message:
       prefix: "docker"
-    groups:
-      docker-updates:
-        patterns:
-          - "*"
-
-  - package-ecosystem: "docker"
-    directory: "/modules"
-    schedule:
-      interval: "daily"
-    commit-message:
-      prefix: "docker"
-    groups:
-      docker-updates:
-        patterns:
-          - "*"
-
-  - package-ecosystem: "docker"
-    directory: "/nginx"
-    schedule:
-      interval: "daily"
-    commit-message:
-      prefix: "docker"
-    groups:
-      docker-updates:
-        patterns:
-          - "*"
-
-  - package-ecosystem: "docker"
-    directory: "/guard"
-    schedule:
-      interval: "daily"
-    commit-message:
-      prefix: "docker"
-    groups:
-      docker-updates:
-        patterns:
-          - "*"
