@@ -73,19 +73,19 @@ jobs:
           registry-password: ${{ secrets.GITHUB_TOKEN }}
           format: "spdx-json"
           output-file: "sbom-${{ matrix.target }}.spdx.json"
-          dependency-snapshot: true
+          dependency-snapshot: false
 
-      # - name: Sanitize PURLs in SBOM
-      #   run: |
-      #     sed -i -E '/"referenceLocator": *"pkg:/ s/\+/%2B/g' "sbom-${{ matrix.target }}.spdx.json"
+      - name: Sanitize PURLs in SBOM
+        run: |
+          sed -i -E '/"referenceLocator": *"pkg:/ s/\+/%2B/g' "sbom-${{ matrix.target }}.spdx.json"
 
-      # - name: Submit Dependency Snapshot to GitHub Dependency Graph
-      #   uses: advanced-security/spdx-dependency-submission-action@v0.3.2
-      #   with:
-      #     filePath: "."
-      #     filePattern: "sbom-${{ matrix.target }}.spdx.json"
-      #     correlator: "${{ github.workflow }}-${{ github.job }}-${{ matrix.target }}"
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Submit Dependency Snapshot to GitHub Dependency Graph
+        uses: advanced-security/spdx-dependency-submission-action@v0.4.0
+        with:
+          filePath: "."
+          filePattern: "sbom-${{ matrix.target }}.spdx.json"
+          correlator: "${{ github.workflow }}-${{ github.job }}-${{ matrix.target }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v7
