@@ -20,6 +20,7 @@ jobs:
           dockerfile: "Dockerfile"
           recursive: true
           config: .hadolint.yaml
+          # Fail on warnings and errors, ignoring accepted rules defined in .hadolint.yaml
           failure-threshold: warning
 
   trivy:
@@ -34,6 +35,7 @@ jobs:
         with:
           scan-type: "fs"
           scan-ref: "."
-          scanners: "misconfig,secret"
+          scanners: "vuln,misconfig,secret"
           trivy-config: "trivy.yaml"
           exit-code: "1"
+          extra-args: "--include-dev-deps"
