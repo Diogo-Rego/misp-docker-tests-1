@@ -220,7 +220,7 @@ set_up_apachesecureauth() {
             \"ldapDefaultRoleId\": ${APACHESECUREAUTH_LDAP_DEFAULT_ROLE_ID},
             \"ldapDefaultOrg\": \"${APACHESECUREAUTH_LDAP_DEFAULT_ORG}\",
             \"ldapAllowReferrals\": ${APACHESECUREAUTH_LDAP_OPT_REFERRALS},
-            \"ldapEmailField\": ${APACHESECUREAUTH_LDAP_EMAIL_FIELD}
+            \"ldapEmailField\": [\"${APACHESECUREAUTH_LDAP_EMAIL_FIELD}\"]
         }
     }" > /dev/null
 
@@ -425,8 +425,10 @@ set_up_custom_auth() {
         if [[ "$OIDC_ENABLE" != "true" || -z "${OIDC_LOGOUT_URL:-}" ]]; then
             sudo -u www-data /var/www/MISP/app/Console/cake Admin setSetting -q -n "Plugin.CustomAuth_custom_logout"
         fi
-        # Re-enable settings
-        sudo -u www-data /var/www/MISP/app/Console/cake Admin setSetting -q "Security.require_password_confirmation" true
+        # Re-enable settings if no other external auth is on, they have no local password
+        if [[ "$OIDC_ENABLE" != "true" && "$APACHESECUREAUTH_LDAP_ENABLE" != "true" && "$LDAPAUTH_ENABLE" != "true" && "$AAD_ENABLE" != "true" ]]; then
+            sudo -u www-data /var/www/MISP/app/Console/cake Admin setSetting -q "Security.require_password_confirmation" true
+        fi
         sudo -u www-data /var/www/MISP/app/Console/cake Admin setSetting -q "MISP.log_auth" true
 
         echo "... CUSTOM_AUTH authentication disabled"

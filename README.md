@@ -155,8 +155,9 @@ PROXY_PORT=8888
 > [!WARNING]
 > **Important:** You must create the `guard/config.json` file **before** starting the container.
 > If the file does not exist, Docker/Podman will automatically create it as an empty **directory**, which will cause the misp-guard container to fail and continuously restart.
-> 
+>
 > Create it first:
+>
 > ```bash
 > mkdir -p guard
 > touch guard/config.json
@@ -257,7 +258,6 @@ LDAPAUTH_LDAPTLSPROTOCOLMIN=LDAP_OPT_X_TLS_PROTOCOL_TLS1_2
 
 STARTTLS is set to false as it's meant to upgrade an unencrypted connection (LDAP) to a secure one if possible automatically (LDAPS).
 As we use LDAPS (hardcoded) or no connection at all, this isn't desired.
-
 
 #### OIDC Authentication
 
@@ -367,7 +367,6 @@ CUSTOM_AUTH_CUSTOM_LOGOUT=
   - `./files`: `/var/www/MISP/app/files/`
   - `./gnupg`: `/var/www/MISP/.gnupg/`
 - If you need to automatically run additional steps each time the container starts, create a new file `files/customize_misp.sh`, and replace the variable `${CUSTOM_PATH}` inside `docker-compose.yml` with its parent path.
-- If you are interested in running streamlined versions of the images (fewer dependencies, easier approval from compliance), you might want to use the `latest-slim` tag. Just adjust the `docker-compose.yml` file, and run again `docker compose pull` and `docker compose up`.
 
 #### Breaking changes
 
@@ -391,11 +390,15 @@ This improves security and scalability of the front-facing NGINX server but lead
 
 **TLS/SSL:** The existing `./ssl` volume mount from `misp-core` is moved to the `misp-nginx` container, so existing certificates keep working.
 
+**Permissions:** `misp-nginx` runs as a non-root user (uid/gid `101`) and mounts `./ssl` read-only, so `cert.pem` and `key.pem` must be readable by that user. If `key.pem` is owned by `root` with mode `600`, HTTPS will not work. Grant read access with `chgrp 101 ssl/key.pem && chmod 640 ssl/key.pem` or, since gid `101` may already belong to an unrelated group on the host (e.g. `ssh_keys` on RHEL), with an ACL: `setfacl -m u:101:r ssl/key.pem`.
+
 **Certificates:** SSL is disabled if certificates are missing, but you can generate self-signed certificates with the following command: `mkdir -p ./ssl/ && openssl req -x509 -subj '/CN=localhost' -nodes -newkey rsa:4096 -keyout ssl/key.pem -out ssl/cert.pem -days 365 -addext "subjectAltName = DNS:localhost, IP:127.0.0.1, IP:::1"`
 
 **GPG key delivery:** `gpg.asc` is now served via `misp-nginx`, which proxies the request through to `misp-core` (PHP-FPM) rather than serving a static file from the webroot path.
 
 **Kubernetes/Helm:** manifests have been updated for the new two-container topology; if you deploy via Helm/Kubernetes, review the updated chart before upgrading.
+
+**Slim image flavour:** since we have been actively bumping dependencies and resolving security concerns, we are sunsetting slim images and focus our efforts on a single (standard) flavour for both `misp-core` and `misp-modules`.
 
 ### High availability deployments
 
@@ -448,24 +451,7 @@ sed -e '/^[[:space:]]*$/d' -e '/[#@]/d' -e 's/\"//g' -e 's/\(^[^=]*\)=\(.*\)/\1=
 docker buildx bake -f docker-bake.hcl -f env.hcl --provenance false debian
 ```
 
-This builds `misp-core`, `misp-modules`, and `misp-guard` with all features included.
-
-**Build slim images:**
-
-```bash
-export NAMESPACE=local
-export COMMIT_HASH=`git rev-parse --short HEAD`
-sed -e '/^[[:space:]]*$/d' -e '/[#@]/d' -e 's/\"//g' -e 's/\(^[^=]*\)=\(.*\)/\1="\2"/' template.env > env.hcl
-docker buildx bake -f docker-bake.hcl -f env.hcl --provenance false debian-slim
-```
-
-This builds lightweight versions of `misp-core-slim`, `misp-modules-slim`, and `misp-guard` with reduced dependencies.
-
-**Available bake targets:**
-
-- `standard` - Full-featured images (misp-core, misp-modules, misp-guard)
-- `slim` - Lightweight images (misp-core-slim, misp-modules-slim, misp-guard)
-- `default` - Builds all variants (both standard and slim)
+This builds `misp-core`, `misp-modules`, `misp-nginx`, and `misp-guard`.
 
 **Note:** The (GNU) `sed` command converts `template.env` to `env.hcl` format by removing empty lines, comments, and properly formatting variables for the bake file (on OSX you should install `gsed`).
 
