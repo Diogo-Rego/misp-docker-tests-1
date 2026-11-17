@@ -123,6 +123,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP_PACKAGE_VERSION} && \
 
 WORKDIR /tmp/pecl-text-ssdeep
 RUN --mount=type=bind,from=ghcr.io/php/pie:bin,source=/pie,target=/usr/local/bin/pie <<-EOF
+    set -e
     cp "/usr/lib/$(gcc -dumpmachine)"/libfuzzy.* /usr/lib
     pie install --no-cache \
         rdkafka/rdkafka \
@@ -131,6 +132,7 @@ RUN --mount=type=bind,from=ghcr.io/php/pie:bin,source=/pie,target=/usr/local/bin
         awesome/simdjson_plus
     git clone --recursive --depth=1 https://github.com/JakubOnderka/pecl-text-ssdeep.git .
     phpize && ./configure && make && make install
+    ls -lsa
     tar -czf /pecl_libs.tar.gz \
         /usr/lib/php/${PHP_API_VERSION}/ssdeep.so \
         /usr/lib/php/${PHP_API_VERSION}/rdkafka.so \
