@@ -20,7 +20,7 @@ jobs:
           dockerfile: "Dockerfile"
           recursive: true
           config: .hadolint.yaml
-          failure-threshold: warning
+          failure-threshold: error
 
   trivy:
     name: Trivy Misconfiguration Scan
