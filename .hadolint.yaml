@@ -1,6 +1,6 @@
-# ignored:
-#   - DL3008 # Pin versions in apt get install
-#   - DL3009 # Delete the apt lists
-#   - DL3013 # Pin versions in pip
+ignored:
+  - DL3008 # Pin versions in apt get install
+  - DL3009 # Delete the apt lists
+  - DL3013 # Pin versions in pip
 #   - DL4006 # Set the SHELL option -o pipefail
 #   - SC2086 # Double quote to prevent globbing and word splitting
