@@ -5,6 +5,6 @@ misconfiguration:
 severity:
   - CRITICAL
   - HIGH
-  # - MEDIUM
+  - MEDIUM
 
 exit-code: 1
